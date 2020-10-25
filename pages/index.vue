@@ -1,5 +1,5 @@
 <template>
-  <div class="container mx-auto px-2 my-10">
+  <div class="container mx-auto my-10 wrapper">
     <items></items>
   </div>
 </template>
@@ -15,5 +15,7 @@ export default {
 </script>
 
 <style>
-
+.wrapper {
+  max-width: 1000px;
+}
 </style>

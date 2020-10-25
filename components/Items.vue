@@ -2,11 +2,18 @@
   <div class="wrapper">
     <h1 class="items__title mx-1 text-4xl text-center text-gray-700">Витрина</h1>
 
-    <div class="toggle__wrapper mx-1 sticky top-0 right-0 z-10">
-      <button @click.prevent="payment = !payment"
-              class="ml-auto bg-blue-500 hover:bg-blue-700 text-white block py-2 px-4 rounded shadow-md">
-        {{ payment ? 'Бонусы' : 'Деньги' }}
-      </button>
+    <div class="toggle__wrapper mx-1 sticky top-0 right-0 z-10 flex justify-end">
+      <label for="toggle__button" class="flex items-center cursor-pointer bg-white px-4 py-2 -mr-1 rounded-lg border border-gray-400 shadow-md">
+        <div class="mr-3 text-gray-700 font-medium">
+          {{ payment ? 'Деньги' : 'Бонусы' }}
+        </div>
+
+        <div class="relative">
+          <input id="toggle__button" type="checkbox" class="hidden" v-model="payment" />
+          <div class="toggle__line w-10 h-4 bg-gray-400 rounded-full shadow-inner"></div>
+          <div class="toggle__dot absolute w-6 h-6 bg-blue-500 rounded-full shadow inset-y-0 left-0"></div>
+        </div>
+      </label>
     </div>
 
     <div class="items__filters flex flex-wrap mx-1 mt-2">
@@ -67,7 +74,7 @@
       </div>
     </div>
 
-    <div v-if="!loading" class="items__wrapper flex flex-wrap justify-center -mx-1 mt-8">
+    <div v-if="!loading" class="items__wrapper flex flex-wrap justify-center -mx-4">
       <item v-for="(item, key) in filteredList" :key="key" :item="item" :payment="payment"></item>
     </div>
     <loader v-else></loader>
@@ -100,20 +107,14 @@ export default {
   },
   mounted() {
     const axios = require('axios').default;
-    axios.post('https://krapipl.imumk.ru:8443/api/mobilev1/update', {})
+    axios.post('https://krapipl.imumk.ru:8443/api/mobilev1/update')
       .then((response) => {
-        setTimeout(() => {
-          this.obtainedData = response.data.items
-          this.subjectData = [...new Set(this.obtainedData.map(item => item.subject))];
-          this.genreData = [...new Set(this.obtainedData.map(item => item.genre))];
-          this.gradeData = [...new Set(this.obtainedData.map(item => item.grade))];
-          this.loading = false
-        }, 1000)
+        this.obtainedData = response.data.items
+        this.subjectData = [...new Set(this.obtainedData.map(item => item.subject))];
+        this.genreData = [...new Set(this.obtainedData.map(item => item.genre))];
+        this.gradeData = [...new Set(this.obtainedData.map(item => item.grade))];
+        this.loading = false
       })
-
-      .catch(function (error) {
-        console.log(error);
-      });
   },
   methods: {
     test() {
@@ -121,6 +122,12 @@ export default {
     }
   },
   computed: {
+    // someFunc(func, filter, item) {
+    //   if (filter === 'all') {
+    //     return this.obtainedData
+    //   }
+    //   return this.obtainedData.filter(t => t.item === filter)
+    // },
     filteredBySubject() {
       if (this.filterSubject === 'all') {
         return this.obtainedData
@@ -152,5 +159,16 @@ export default {
 <style scoped>
 .toggle__wrapper {
   top: 20px;
+}
+
+.toggle__dot {
+  top: -.25rem;
+  left: -.25rem;
+  transition: all 0.3s ease-in-out;
+}
+
+input:checked ~ .toggle__dot {
+  transform: translateX(100%);
+  background-color: #48bb78;
 }
 </style>
