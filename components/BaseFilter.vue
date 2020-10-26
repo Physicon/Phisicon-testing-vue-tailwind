@@ -1,8 +1,8 @@
 <template>
   <div
-    class="relative w-full mt-1 sm:w-auto sm ml-2">
+    class="relative w-48 mt-1 mx-auto sm:mt-2 md:mr-2 md:ml-0">
     <select
-      class="items__subject block w-full appearance-none bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
+      class="focus:outline-none block w-full appearance-none bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
       v-model="filterValue" @change="$emit('change', filterValue, filter.name)">
       <option value="all">
         <slot></slot>

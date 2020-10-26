@@ -1,26 +1,30 @@
 <template>
   <div class="container mx-auto my-10">
-    <div class="wrapper mx-auto">
-      <h1 class="items__title mx-1 text-4xl text-center text-gray-700">Витрина</h1>
 
-      <div class="toggle__wrapper mx-1 sticky top-0 right-0 z-10 flex justify-end">
-        <label for="toggle__button"
-               class="flex items-center cursor-pointer bg-white px-4 py-2 -mr-1 rounded-lg border border-gray-400 shadow-md">
-          <div class="mr-3 text-gray-700 font-medium">
-            {{ payment ? 'Деньги' : 'Бонусы' }}
-          </div>
+    <div class="toggle__wrapper sticky right-0 z-10 w-48 mx-auto sm:mr-0">
+      <label for="toggle__button"
+             class="flex items-center cursor-pointer bg-white px-4 py-2 rounded border border-gray-400 shadow-sm">
 
-          <div class="relative">
-            <input id="toggle__button" type="checkbox" class="hidden" v-model="payment"/>
-            <div class="toggle__line w-10 h-4 bg-gray-400 rounded-full shadow-inner"></div>
-            <div class="toggle__dot absolute w-6 h-6 bg-blue-500 rounded-full shadow inset-y-0 left-0"></div>
-          </div>
-        </label>
-      </div>
+        <div class="relative">
+          <input id="toggle__button" type="checkbox" class="hidden" v-model="payment"/>
+          <div class="toggle__line w-10 h-4 bg-gray-400 rounded-full shadow-inner"></div>
+          <div class="toggle__dot absolute w-6 h-6 bg-blue-500 rounded-full shadow inset-y-0 left-0"></div>
+        </div>
 
-      <div class="items__filters flex flex-wrap mx-1 mt-2">
+        <div class="ml-3 text-gray-700 font-medium">
+          {{ payment ? 'Деньги' : 'Бонусы' }}
+        </div>
+      </label>
+    </div>
+
+    <div class="wrapper mx-auto overflow-hidden relative">
+      <h1 class="items__title mx-1 text-4xl text-center text-gray-800">Витрина</h1>
+
+      <hr class="mb-2">
+
+      <div class="items__filters flex flex-wrap">
         <base-filter :filter="filters.filterSubject" :subject-data="subjectData" @change="change"
-                     class="sm:ml-0">
+                     class="">
           Все предметы
         </base-filter>
 
@@ -34,30 +38,33 @@
           Все классы
         </base-filter>
 
-        <div class="w-full mt-2 sm:w-1/2">
+        <div class="mx-auto w-48 mt-2 sm:w-1/2 md:w-auto md:ml-0 lg:ml-auto lg:mr-0">
           <label for="searchId"></label>
           <input
-            class="appearance-none w-full bg-gray-200 text-gray-700 border border-gray-400 rounded py-2 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500 shadow-md"
-            type="text" v-model="search" id="searchId" placeholder="Search...">
+            class="appearance-none w-full bg-gray-100 text-gray-700 border border-gray-400 rounded py-2 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500 shadow"
+            type="text" v-model="search" id="searchId" placeholder="Поиск...">
         </div>
       </div>
 
-      <div v-if="!loading" class="items__wrapper flex flex-wrap justify-center mx-0 sm:-mx-8 xl:-mx-4">
-        <div v-for="(item, key) in filteredList" :key="key"
-             class="item__wrapper mt-16 w-full sm:w-1/3 sm:px-8 lg:w-1/4">
-          <div class="item border border-gray-500 rounded-lg shadow-md overflow-hidden mx-auto">
+      <hr class="mt-4 mb-2">
+
+      <div v-if="!loading" class="items__wrapper flex flex-wrap justify-center mx-0 sm:-mx-8 md:-mx-3 lg:-mx-5 xl:-mx-6">
+        <div v-for="(item, key) in filteredList"
+             :key="key"
+             class="mt-4 w-48 sm:w-1/3 sm:px-8 md:w-1/4 md:px-3 lg:w-1/5 lg:px-5 xl:w-1/6 xl:px-6">
+          <div class="item border text-gray-700 border-gray-500 rounded-lg shadow-md mx-auto overflow-hidden">
             <div class="image__wrapper">
               <img class="image" :src="'https://www.imumk.ru/svc/coursecover/'+ item.courseId" alt="">
             </div>
             <div class="item__description px-5 py-3">
               <div class="block truncate text-md" :title="item.title">{{ item.subject }}</div>
-              <span class="block text-sm">{{ item.grade }} класс</span>
+              <span class="block text-md -mt-2">{{ item.grade }} класс</span>
               <span class="block text-xs">{{ item.genre }}</span>
-              <a class="text-blue-500" :href="item.shopUrl">Подробнее</a>
-              <div v-if="payment" class="text-white text-center bg-blue-500 rounded-lg px-2 py-1 mt-2">{{ item.price }}
+              <a class="text-blue-500 text-xs font-bold mt-4" :href="item.shopUrl">Подробнее</a>
+              <div v-if="payment" class="text-white text-xs text-center font-bold bg-blue-500 rounded px-2">{{ item.price }}
                 руб.
               </div>
-              <div v-else class="text-white text-center bg-blue-500 rounded-lg px-2 py-1 mt-2">{{ item.priceBonus }}
+              <div v-else class="text-white text-xs text-center font-bold bg-blue-500 rounded px-2">{{ item.priceBonus }}
                 бонусов
               </div>
             </div>
@@ -163,14 +170,6 @@ export default {
 </script>
 
 <style>
-.wrapper {
-  max-width: 1000px;
-}
-
-.toggle__wrapper {
-  top: 20px;
-}
-
 .toggle__dot {
   top: -.25rem;
   left: -.25rem;
@@ -182,7 +181,7 @@ input:checked ~ .toggle__dot {
   background-color: #48bb78;
 }
 
-.item {
-  width: 170px;
+.toggle__wrapper {
+  top: 20px;
 }
 </style>
