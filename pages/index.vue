@@ -49,8 +49,8 @@
       <hr class="mt-4 mb-2">
 
       <div v-if="!loading" class="items__wrapper flex flex-wrap justify-center mx-0 sm:-mx-8 md:-mx-3 lg:-mx-5 xl:-mx-6">
-        <div v-for="(item, key) in filteredList"
-             :key="key"
+        <div v-for="item in filteredData"
+             :key="item.courseHash"
              class="mt-4 w-48 sm:w-1/3 sm:px-8 md:w-1/4 md:px-3 lg:w-1/5 lg:px-5 xl:w-1/6 xl:px-6">
           <div class="item border text-gray-700 border-gray-500 rounded-lg shadow-md mx-auto overflow-hidden">
             <div class="image__wrapper">
@@ -79,18 +79,30 @@
 <script>
 import BaseLoader from "../components/BaseLoader";
 import BaseFilter from "../components/BaseFilter";
+import axios from "axios";
+import _ from "lodash"
 
 export default {
+  async asyncData({$axios}) {
+    const response = await $axios.post('https://krapipl.imumk.ru:8443/api/mobilev1/update')
+      .then(response => {
+        return response.data.items
+      })
+
+    return {
+      obtainedData: response,
+      subjectData: [...new Set(response.map(item => item.subject))],
+      genreData: [...new Set(response.map(item => item.genre))],
+      gradeData: [...new Set(response.map(item => item.grade))]
+    }
+  },
+
   components: {
     BaseLoader,
     BaseFilter
   },
   data() {
     return {
-      obtainedData: '',
-      subjectData: [],
-      genreData: [],
-      gradeData: [],
       filters: {
         filterSubject: {
           name: 'filterSubject',
@@ -107,63 +119,37 @@ export default {
       },
       search: '',
       payment: true,
-      loading: true
+      loading: false
     }
   },
-  mounted() {
-    const axios = require('axios').default;
-    axios.post('https://krapipl.imumk.ru:8443/api/mobilev1/update')
-      .then((response) => {
-        this.obtainedData = response.data.items
-        this.subjectData = [...new Set(this.obtainedData.map(item => item.subject))];
-        this.genreData = [...new Set(this.obtainedData.map(item => item.genre))];
-        this.gradeData = [...new Set(this.obtainedData.map(item => item.grade))].sort((a, b) => {
-          let numA = +a, numB = +b
-          if (numA < numB) //sort string ascending
-            return -1;
-          if (numA > numB)
-            return 1;
-          return 0;
-        });
-        this.loading = false
-      })
-  },
+
   methods: {
     change(payload, name) {
       this.filters[name].value = payload
-    }
-  },
-  computed: {
-    // someFunc(some, filter, item) {
-    //   if (filter === 'all') {
-    //     return this.obtainedData
-    //   }
-    //   return this.obtainedData.filter(t => t[item] === filter)
-    // },
+    },
 
-    filteredBySubject() {
-      if (this.filters.filterSubject.value === 'all') {
+    someMethod(key, subject) {
+      if (this.filters[key].value === 'all') {
         return this.obtainedData
       }
-      return this.obtainedData.filter(t => t.subject === this.filters.filterSubject.value)
+      return this.obtainedData.filter(t => t[subject] === this.filters[key].value)
     },
-    filteredByGenre() {
-      if (this.filters.filterGenre.value === 'all') {
-        return this.filteredBySubject
-      }
-      return this.filteredBySubject.filter(t => t.genre === this.filters.filterGenre.value)
+  },
+  computed: {
+    filteredData() {
+      return _.intersection(
+        this.someMethod('filterSubject', 'subject'),
+        this.someMethod('filterGenre', 'genre'),
+        this.someMethod('filterGrade', 'grade'),
+        this.filteredList
+      )
     },
-    filteredByGrade() {
-      if (this.filters.filterGrade.value === 'all') {
-        return this.filteredByGenre
-      }
-      return this.filteredByGenre.filter(t => t.grade === this.filters.filterGrade.value)
-    },
+
     filteredList() {
       if (this.search) {
-        return this.filteredByGrade.filter(post => post.title.toLowerCase().includes(this.search.toLowerCase()))
+        return this.obtainedData.filter(post => post.title.toLowerCase().includes(this.search.toLowerCase()))
       }
-      return this.filteredByGrade
+      return this.obtainedData
     }
   }
 }
