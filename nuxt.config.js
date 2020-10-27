@@ -2,7 +2,7 @@
 export default {
   target: 'static',
   router: {
-    base: '/<physicon-static>/'
+    base: '/physicon-static/'
   },
   /*
   ** Headers of the page
