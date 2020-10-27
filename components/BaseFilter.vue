@@ -42,20 +42,7 @@ export default {
     editedOption(data) {
       return data.split(';').join(', ')
     },
-    sort(data) {
-      data.sort((a, b) => {
-        let numA = +a, numB = +b
-        if (numA < numB) //sort string ascending
-          return -1;
-        if (numA > numB)
-          return 1;
-        return 0;
-      });
-    }
   },
-  computed: {
-
-  }
 }
 </script>
 

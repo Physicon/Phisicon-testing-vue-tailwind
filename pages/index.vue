@@ -1,6 +1,7 @@
 <template>
   <div class="container mx-auto my-10">
 
+<!--    Toggle bonus/money price / Переключатель цен за бонусы/деньги-->
     <div class="toggle__wrapper sticky right-0 z-10 w-48 mx-auto sm:mr-0">
       <label for="toggle__button"
              class="flex items-center cursor-pointer bg-white px-4 py-2 rounded border border-gray-400 shadow-sm">
@@ -22,6 +23,7 @@
 
       <hr class="mb-2">
 
+<!--      Filters / Фильтры-->
       <div class="items__filters flex flex-wrap">
         <base-filter :filter="filters.filterSubject" :subject-data="subjectData" @change="change"
                      class="">
@@ -38,6 +40,7 @@
           Все классы
         </base-filter>
 
+<!--        Search / Поиск-->
         <div class="mx-auto w-48 mt-2 sm:w-1/2 md:w-auto md:ml-0 lg:ml-auto lg:mr-0">
           <label for="searchId"></label>
           <input
@@ -48,10 +51,11 @@
 
       <hr class="mt-4 mb-2">
 
+<!--      Content / Контент-->
       <div v-if="!loading" class="items__wrapper flex flex-wrap justify-center mx-0 sm:-mx-8 md:-mx-3 lg:-mx-5 xl:-mx-6">
         <div v-for="item in filteredData"
              :key="item.courseHash"
-             class="mt-4 w-48 sm:w-1/3 sm:px-8 md:w-1/4 md:px-3 lg:w-1/5 lg:px-5 xl:w-1/6 xl:px-6">
+             class="mt-4 w-48 sm:w-1/3 sm:px-8 md:w-1/4 md:mt-16 md:px-3 lg:w-1/5 lg:px-5 xl:w-1/6 xl:px-6">
           <div class="item border text-gray-700 border-gray-500 rounded-lg shadow-md mx-auto overflow-hidden">
             <div class="image__wrapper">
               <img class="image" :src="'https://www.imumk.ru/svc/coursecover/'+ item.courseId" alt="">
